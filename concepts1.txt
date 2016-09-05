@@ -1,0 +1,566 @@
+-------------------------------------------------------------------------------------------------------------                  
+                                    linux concepts
+-----------------------------------------------------------------------------------------------------------
+-->In unix like systems you will access peripheral devices through files. want to print something there is a   file representing the printer you have to write to the file to print it. 
+
+-->bin contains machine code for basic linux commands or common commands 
+
+-->boot directory contains machine code for os kernal and related files..it may contains different version     it is the bootloaders duty to pick the desired kernal version from boot  
+
+-->dev directory contains special files..character and block special files.......most of the files are          abstactions for peripheral devices....chracter specific files eg reading from keyboard..block special       files eg files reading from hard disk ...it not only contains files for peripheral devices but also has     other purposes
+
+--> zero and null are two special files in /dev...zero act as a infinite source of zero you will never get      EOF. null is a file it can act as an infinite sink .. will simply vanish it doesnt stored in disk..
+
+-->/etc contains configuration files--file which contains information critical to the working of the system-- like passwd--contains users and information about user ,host file etc
+
+-->/home --it stores the login directory
+-->/lib  (lib32,lib64) contains .so files shared object files (for dynamic linking) mainly librarys important for the system.most important library is the libc(standard c libray)..
+
+-->/proc  ..contains numberd folders and files...files lik cpuinfove access to data stored os data structures.
+
+-->/sbin--contains programme require su privillege to execute it  ex partioning the HD ..creating a file sm..configure a network...
+
+.-->/var/log contains log files
+
+-->deamon --background process .not assosiated with any teminal..they are started automaatically when system bot up...they are not started by any command typing in the terminal..
+
+-->sleepimg process..are process they are waiting for some events to happen eg..keyboard input...programe does not consume any cpu cycle..also called blocked/waiting process..
+
+--> when using pipe(|) what is actually happening is os kernal will create a queue (fifo) ds ..when a|b ...it will redirect the ouput of a to end of queue ..and redirect input of b to another end of the q....redirection is doen to a in memmory ds called a pipe..(it is an in memmory ds)...the default size of a pipe is 4KB...8*512 Bytes....
+
+
+Starting an x86-based Linux system involves a number of steps. When the computer is powered on, the Basic Input/Output System (BIOS) initializes the hardware, including the screen and keyboard, and tests the main memory. This process is also called POST (Power On Self Test).
+
+The BIOS software is stored on a ROM chip on the motherboard. After this, the remainder of the boot process is completely controlled by the operating system.
+
+Master Boot Records (MBR) and Boot Loader..... Once the POST is completed, the system control passes from the BIOS to the boot loader. The boot loader is usually stored on one of the hard disks in the system, either in the boot sector (for traditional BIOS/MBR systems) or the EFI partition (for more recent (Unified) Extensible Firmware Interface or EFI/UEFI systems). Up to this stage, the machine does not access any mass storage media. Thereafter, information on the date, time, and the most important peripherals are loaded from the CMOS values (after a technology used for the battery-powered memory store - which allows the system to keep track of the date and time even when it is powered off).
+
+A number of boot loaders exist for Linux; the most common ones are GRUB (for GRand Unified Boot loader) and ISOLINUX (for booting from removable media). Most Linux boot loaders can present a user interface for choosing alternative options for booting Linux, and even other operating systems that might be installed. When booting Linux, the boot loader is responsible for loading the kernel image and the initial RAM disk (which contains some critical files and device drivers needed to start the system) into memory.
+
+
+For systems using the BIOS/MBR method, the boot loader resides at the first sector of the hard disk also known as the Master Boot Record (MBR). The size of the MBR is just 512 bytes. In this stage, the boot loader examines the partition table and finds a bootable partition.
+
+The second stage boot loader resides under /boot. A splash screen is displayed which allows us to choose which Operating System (OS) to boot. After choosing the OS, the boot loader loads the kernel of the selected operating system into RAM and passes control to it.
+
+The boot loader loads the selected kernel image (in the case of Linux) and passes control to it. Kernels are almost always compressed, so its first job is to uncompress itself. After this, it will check and analyze the system hardware and initialize any hardware device drivers built into the kernel.
+
+The boot loader loads both the kernel and an initial RAM–based file system (initramfs) into memory so it can be used directly by the kernel.  
+
+When the kernel is loaded in RAM, it immediately initializes and configures the computer’s memory and also configures all the hardware attached to the system. This includes all processors, I/O subsystems, storage devices, etc. The kernel also loads some necessary user space applications.
+
+
+The Initial RAM Disk
+---------------------
+The initramfs filesystem image contains programs and binary files that perform all actions needed to mount the proper root filesystem, like providing kernel functionality for the needed filesystem and device drivers for mass storage controllers with a facility called udev (for User Device) which is responsible for figuring out which devices are present, locating the drivers they need to operate properly, and loading them. After the root filesystem has been found, it is checked for errors and mounted.
+
+The mount program instructs the operating system that a filesystem is ready for use, and associates it with a particular point in the overall hierarchy of the filesystem (the mount point). If this is successful, the initramfs is cleared from RAM and the init program on the root filesystem (/sbin/init) is executed.
+
+init handles the mounting and pivoting over to the final real root filesystem. If special hardware drivers are needed before the mass storage can be accessed, they must be in the initramfs image.
+
+Once the kernel has set up all its hardware and mounted the root filesystem, the kernel runs the /sbin/init program. This then becomes the initial process, which then starts other processes to get the system running. 
+
+Besides starting the system, init is responsible for keeping the system running and for shutting it down cleanly. It acts as the "manager of last resort" for all non-kernel processes, cleaning up after them when necessary, and restarts user login services as needed when users log in and out.
+
+.Near the end of the boot process,  init starts a number of text-mode login prompts (done by a program called getty). These enable you to type your username, followed by your password, and to eventually get a command shell.
+Usually, the default command shell is bash (the GNU Bourne Again Shell)
+
+if the text console is apperas then type a command called startx to get the GUI.
+
+Generally, in a Linux desktop system, the X Window System is loaded as the final step in the boot process.
+
+A service called the display manager keeps track of the displays being provided, and loads the X server (so-called because it provides graphical services to applications, sometimes called X clients). The display manager also handles graphical logins, and starts the appropriate desktop environment after a user logs in.
+
+x window sysytem
+----------------
+A desktop environment consists of a session manager, which starts and maintains the components of the graphical session, and the window manager, which controls the placement and movement of windows, window title-bars, and controls.
+
+Although these can be mixed, generally a set of utilities, session manager, and window manager are used together as a unit, and together provide a seamless desktop environment.
+----------------
+
+GNOME is a popular desktop environment and graphical user interface that runs on top of the Linux operating system.The default display manager for GNOME is called gdm.
+The gdm display manager presents the user with the login screen which prompts for the login username and password.
+-----------------
+
+
+The Network Time Protocol (NTP) is the most popular and reliable protocol for setting the local time via Internet servers...If desired, more detailed configuration is possible by editing the standard NTP configuration file (/etc/ntp.conf) for Linux NTP utilities...
+----------
+
+in the Debian Family System.
+
+dpkg is the underlying package manager for these systems; it can install, remove, and build packages. For Debian-based systems, the higher-level package management system is the apt (Advanced Package Tool) system of utilities.
+--------------
+
+Linux always uses Coordinated Universal Time (UTC) for its own internal time-keeping .
+---------
+
+terminal
+------------
+"graphical user interfaces make easy tasks easier, while command line interfaces make difficult tasks possible." Linux relies heavily on the abundance of command line tools.
+
+A terminal emulator program emulates (simulates) a stand alone terminal within a window on the desktop. By this we mean it behaves essentially as if you were logging into the machine at a pure text terminal with no running graphical interface. Most terminal emulator programs support multiple terminal sessions by opening additional tabs or windows.
+
+By default, on GNOME desktop environments, the gnome-terminal application is used to emulate a text-mode terminal in a window. Other available terminal programs include:
+
+xterm
+rxvt
+konsole
+terminator
+
+---->Virtual Terminals (VT) are console sessions that use the entire display and keyboard outside of a graphical environment. Such terminals are considered "virtual" because although there can be multiple active terminals, only one terminal remains visible at a time. A VT is not quite the same as a command line terminal window; you can have many of those visible at once on a graphical desktop.
+
+
+--->turning off the graphical deskytop: Use the sudo service gdm stop or sudo service lightdm stop commands, to stop the graphical user interface in Debian-based systems.
+
+sudo
+-------
+All the demonstrations created have a user configured with sudo capabilities to provide the user with administrative (admin) privileges when required. sudo allows users to run programs using the security privileges of another user, generally root (superuser)
+
+secure shell(ssh)
+-------------------
+ you can also connect and log in to remote systems via the Secure Shell (SSH) utility. For example, by typing ssh username@remote-server.com, SSH would connect securely to the remote machine and give you a command line terminal window, using passwords (as with regular logins) or cryptographic keys (a topic we won't discuss) to prove your identity.
+
+shutdown
+----------
+The preferred method to shut down or reboot the system is to use the shutdown command. This sends a warning message and then prevents further users from logging in. The init process will then control shutting down or rebooting the system. It is important to always shut down properly; failure to do so can result in damage to the system and/or loss of data.
+
+The halt and poweroff commands issue shutdown -h to halt the system; reboot issues shutdown -r and causes the machine to reboot instead of just shutting down. Both rebooting and shutting down from the command line requires superuser (root) access.
+When administering a multiuser system, you have the option of notifying all users prior to shutdown as in:
+
+$ sudo shutdown -h 10:00 "Shutting down for scheduled maintenance."
+
+locating programmes
+------------------
+One way to locate programs is to employ the which utility. For example, to find out exactly where the diff program resides on the filesystem:
+
+$ which diff
+
+If which does not find the program, whereis is a good alternative because it looks for packages in a broader range of system directories:
+
+$ whereis diff
+
+absolute and relative path
+---------------------------
+Absolute pathname: An absolute pathname begins with the root directory and follows the tree, branch by branch, until it reaches the desired directory or file. Absolute paths always start with /.
+Relative pathname: A relative pathname starts from the present working directory. Relative paths never start with /.
+
+tree 
+------
+tree  Displays a tree view of the filesystem
+
+
+
+standard File Streams
+-----------------------------
+When commands are executed, by default there are three standard file streams (or descriptors) always open for use: standard input (standard in or stdin), standard output (standard out or stdout) and standard error (or stderr). Usually, stdin is your keyboard, stdout and stderr are printed on your terminal; often stderr is redirected to an error logging file. stdin is often supplied by directing input to come from a file or from the output of a previous command through a pipe. stdout is also often redirected into a file. Since stderr is where error messages are written, often nothing will go there.
+
+In Linux, all open files are represented internally by what are called file descriptors. Simply put, these are represented by numbers starting at zero. stdin is file descriptor 0, stdout is file descriptor 1, and stderr is file descriptor 2. Typically, if other files are opened in addition to these three, which are opened by default, they will start at file descriptor 3 and increase from there.
+
+Wildcards and Matching File Names
+-----------------------------------
+
+You can search for a filename containing specific characters using wildcards.
+
+Wildcard  Result
+?   Matches any single character
+* Matches any string of characters
+[set] Matches any character in the set of characters, for example [adf] will match any occurrence of "a", "d", or "f"
+[!set]  Matches any character not in the set of characters
+To search for files using the ? wildcard, replace each unknown character with ?, e.g. if you know only the first 2 letters are 'ba' of a 3-letter filename with an extension of .out, type ls ba?.out .
+
+To search for files using the * wildcard, replace the unknown string with *, e.g. if you remember only that the extension was .out, type ls *.out
+
+
+find
+----------
+When no arguments are given, find lists all files in the current directory and all of its subdirectories. Commonly used options to shorten the list include -name (only list files with a certain pattern in their name), -iname (also ignore the case of file names), and -type (which will restrict the results to files of a certain specified type, such as d for directory, l for symbolic link or f for a regular file, etc). 
+
+advanced find:
+  Another good use of find is being able to run commands on the files that match your search criteria. The -exec option is used for this purpose.
+
+To find and remove all files that end with .swp:
+$ find -name "*.swp" -exec rm {} ’;’
+
+The {} (squiggly brackets) is a place holder that will be filled with all the file names that result from the find expression, and the preceding command will be run on each one individually.
+
+Note that you have to end the command with either ‘;’ (including the single-quotes) or \; Both forms are fine.
+
+One can also use the -ok option which behaves the same as -exec except that find will prompt you for permission before executing the command. This makes it a good way to test your results before blindly executing any potentially dangerous commands.
+
+Finding Files Based on Time and Size
+
+
+
+It is sometimes the case that you wish to find files according to attributes such as when they were created, last used, etc, or based on their size. Both are easy to accomplish.
+
+Finding based on time:
+$ find / -ctime 3
+
+Here, -ctime is when the inode meta-data (i.e., file ownership, permissions, etc) last changed; it is often, but not necessarily when the file was first created. You can also search for accessed/last read (-atime) or modified/last written (-mtime) times. The number is the number of days and can be expressed as either a number (n) that means exactly that value, +n which means greater than that number, or -n which means less than that number. There are similar options for times in minutes (as in -cmin, -amin, and -mmin).
+
+Finding based on sizes:
+
+$ find / -size 0
+
+Note the size here is in 512-byte blocks, by default; you can also specify bytes (c), kilobytes (k), megabytes (M), gigabytes (G), etc. As with the time numbers above, file sizes can also be exact numbers (n), +n or -n. For details consult the man page for find.
+
+For example, to find files greater than 10 MB in size and running a command on those files:
+$ find / -size +10M -exec command {} ’;’
+
+
+viewing files
+-----------------
+
+cat Used for viewing files that are not very long; it does not provide any scroll-back.
+tac Used to look at a file backwards, starting with the last line.
+less  Used to view larger files because it is a paging program; it pauses at each screenful of text, provides scroll-back capabilities, and lets you search and navigate within the file. Note: Use / to search for a pattern in the forward direction and ? for a pattern in the backward direction.
+tail  Used to print the last 10 lines of a file by default. You can change the number of lines by doing -n 15 or just -15 if you wanted to look at the last 15 lines instead of the default.
+head  The opposite of tail; by default it prints the first 10 lines of a file.
+
+package manger:
+-------------------
+Both package management systems provide two tool levels: a low-level tool (such as dpkg or rpm), takes care of the details of unpacking individual packages, running scripts, getting the software installed correctly, while a high-level tool (such as apt-get, yum, or zypper) works with groups of packages, downloads packages from the vendor, and figures out dependencies.
+
+Most of the time users need work only with the high-level tool, which will take care of calling the low-level tool as needed. Dependency tracking is a particularly important feature of the high-level tool, as it handles the details of finding and installing each dependency for you. Be careful, however, as installing a single package could result in many dozens or even hundreds of dependent packages being installed.
+-----------------------------------------------------------
+
+Introduction to Filesystems
+-------------------------------
+In Linux (and all UNIX-like operating systems) it is often said “Everything is a file”, or at least it is treated as such. This means whether you are dealing with normal data files and documents, or with devices such as sound cards and printers, you interact with them through the same kind of Input/Output (I/O) operations. This simplifies things: you open a “file” and perform normal operations like reading the file and writing on it (which is one reason why text editors, which you will learn about in an upcoming section, are so important.)
+
+On many systems (including Linux), the filesystem is structured like a tree. The tree is usually portrayed as inverted, and starts at what is most often called the root directory, which marks the beginning of the hierarchical filesystem and is also some times referred to as the trunk, or simply denoted by /. The root directory is not the same as the root user. 
+
+
+
+partition
+---------
+
+Each filesystem resides on a hard disk partition. Partitions help to organize the contents of disks according to the kind of data contained and how it is used. For example, important programs required to run the system are often kept on a separate partition (known as root or /) than the one that contains files owned by regular users of that system (/home). In addition, temporary files created and destroyed during the normal operation of Linux are often located on a separate partition; 
+
+-------
+mount point 
+-----------
+Before you can start using a filesystem, you need to mount it to the filesystem tree at a mount point. This is simply a directory (which may or may not be empty) where the filesystem is to be attached (mounted). Sometimes you may need to create the directory if it doesn't already exist.
+
+
+The mount command is used to attach a filesystem (which can be local to the computer or, as we shall discuss, on a network) somewhere within the filesystem tree. Arguments include the device node and mount point. For example,
+
+$ mount /dev/sda5 /home
+
+will attach the filesystem contained in the disk partition associated with the /dev/sda5 device node, into the filesystem tree at the /home mount point. 
+
+Typing mount without any arguments will show all presently mounted filesystems.
+
+The command df -Th (disk-free)
+---------------------------
+ will display information about mounted filesystems including usage statistics about currently used and available space.
+
+network filesystem
+-------------------
+NFS (the Network Filesystem) is one of the methods used for sharing data across physical systems. Many system administrators mount remote users' home directories on a server in order to give them access to the same files and configuration files across multiple client systems. This allows the users to log in to different computers yet still have access to the same files and resources.
+
+
+nfs on the network server
+-------------------------
+On the server machine, NFS daemons (built-in networking and service processes in Linux) and other system servers are typically started with the following command: sudo service nfs start
+
+The text file /etc/exports contains the directories and permissions that a host is willing to share with other systems over NFS. An entry in this file may look like the following:
+
+/projects *.example.com(rw)
+
+This entry allows the directory /projects to be mounted using NFS with read and write (rw) permissions and shared with other hosts in the example.com domain. As we will detail in the next chapter, every file in Linux has 3 possible permissions: read (r), write (w) and execute (x).
+
+After modifying the /etc/exports file, you can use the exportfs -av command to notify Linux about the directories you are allowing to be remotely mounted using NFS (restarting NFS with sudo service nfs restart will also work, but is heavier as it halts NFS for a short while before starting it up again)
+
+proc filesystem
+--------------
+Certain filesystems like the one mounted at /proc are called pseudo filesystems because they have no permanent presence anywhere on disk.
+
+The /proc filesystem contains virtual files (files that exist only in memory) that permit viewing constantly varying kernel data. This filesystem contains files and directories that mimic kernel structures and configuration information. It doesn't contain real files but runtime system information (e.g. system memory, devices mounted, hardware configuration, etc). Some important files in /proc are:
+
+/proc/cpuinfo
+/proc/interrupts
+/proc/meminfo
+/proc/mounts
+/proc/partitions
+/proc/version
+
+/proc has subdirectories as well, including:
+
+/proc/<Process-ID-#>
+/proc/sys
+
+The first example shows there is a directory for every process running on the system which contains vital information about it. The second example shows a virtual directory that contains a lot of information about the entire system, in particular its hardware and configuration. The /proc filesystem is very useful because the information it reports is gathered only as needed and never needs storage on disk.
+
+
+The /home directory is often mounted as a separate filesystem on its own partition
+
+
+
+----------------------------
+
+The /dev 
+----------
+
+
+The /dev directory contains device nodes, a type of pseudo-file used by most hardware and software devices, except for network devices. This directory is:
+
+Empty on the disk partition when it is not mounted
+Contains entries which are created by the udev system, which creates and manages device nodes on Linux, creating them dynamically when devices are found. The /dev directory contains items such as:
+/dev/sda1 (first partition on the first hard disk)
+/dev/lp1 (second printer)
+/dev/dvd1 (first DVD drive)
+
+
+The /var and /etc Directories
+-----------------------------
+
+The /var directory contains files that are expected to change in size and content as the system is running (var stands for variable) such as the entries in the following directories:
+
+System log files: /var/log
+Packages and database files: /var/lib
+Print queues: /var/spool
+Temp files: /var/tmp
+
+
+
+The /boot Directory
+----------------------
+
+The /boot directory contains the few essential files needed to boot the system. For every alternative kernel installed on the system there are four files:
+
+vmlinuz: the compressed Linux kernel, required for booting
+initramfs: the initial ram filesystem, required for booting, sometimes called initrd, not initramfs
+config: the kernel configuration file, only used for debugging and bookkeeping
+System.map: kernel symbol table, only used for debugging
+
+Each of these files has a kernel version appended to its name.
+
+The Grand Unified Bootloader (GRUB) files (such as /boot/grub/grub.conf or /boot/grub2/grub2.cfg) are also found under the /boot directory
+
+
+
+
+
+The /lib and /media Directories
+------------------------------
+/lib contains libraries (common code shared by applications and needed for them to run) for the essential programs in /bin and /sbin. These library filenames either start with ld or lib.
+
+Most of these are what are known as dynamically loaded libraries (also known as shared libraries or Shared Objects (SO)). On some Linux distributions there exists a /lib64 directory containing 64-bit libraries, while /lib contains 32-bit versions.
+
+The /media directory is typically located where removable media, such as CDs, DVDs and USB drives are mounted. Unless configuration prohibits it, Linux automatically mounts the removable media in the /media directory when they are detected.
+
+
+
+/opt
+-------
+  Optional application software packages.
+
+
+/sys  
+------
+Virtual pseudo-filesystem giving information about the system and the hardware. Can be used to alter system parameters and for debugging purposes. 
+
+/srv
+----
+  Site-specific data served up by the system. Seldom used.
+
+/tmp
+----
+
+  Temporary files; on some distributions erased across a reboot and/or may actually be a ramdisk in memory.
+
+/usr
+----
+  Multi-user applications, utilities and data.
+
+
+sub directories under /usr
+--------------------------
+/usr/include  Header files used to compile applications.
+/usr/lib  Libraries for programs in /usr/bin and /usr/sbin.
+/usr/lib64  64-bit libraries for 64-bit programs in /usr/bin and /usr/sbin.
+/usr/sbin Non-essential system binaries, such as system daemons.
+/usr/share  Shared data used by applications, generally architecture-independent.
+/usr/src  Source code, usually for the Linux kernel.
+/usr/X11R6  X Window configuration files; generally obsolete.
+/usr/local  Data and programs specific to the local machine. Subdirectories include bin, sbin, lib, share, include, etc.
+/usr/bin  This is the primary directory of executable commands on the system. 
+
+
+
+/root is the home directory of the super user (root).
+
+------------------------------------------------------------------
+
+
+comparing files
+---------------
+diff is used to compare files and directories. 
+
+
+-c
+Provides a listing of differences that include 3 lines of context before and after the lines differing in content
+-r  Used to recursively compare subdirectories as well as the current directory
+-i  Ignore the case of letters
+-w  Ignore differences in spaces and tabs (white space)
+
+
+
+to compare two files, at the command prompt, type diff <filename1> <filename2>
+---------------------------------------------------------------------------------------------------
+
+
+Back up of data
+---------------
+There are many ways you can back up data or even your entire system. Basic ways to do so include use of simple copying with cp and use of the more robust rsync.
+
+However, rsync is more efficient because it checks if the file being copied already exists. If the file exists and there is no change in size or modification time, rsync will avoid an unnecessary copy and save time. Furthermore, because rsync copies only the parts of files that have actually changed, it can be very fast.
+
+cp can only copy files to and from destinations on the local machine (unless you are copying to or from a filesystem mounted using NFS), but rsync can also be used to copy files from one machine to another.
+
+rsync is very efficient when recursively copying one directory tree to another, because only the differences are transmitted over the network. 
+
+
+Compressing Data
+------------------
+
+gzip---  The most frequently used Linux compression utility
+bzip2 --Produces files significantly smaller than those produced by gzip
+xz -- The most space efficient compression utility used in Linux
+zip-- Is often required to examine and decompress archives from other operating systems
+
+
+In addition the tar utility is often used to group files in an archive and then compress the whole archive at once.
+
+
+-----------------------
+
+Compressing Data Using gzip
+--------------------------
+gzip * 
+-----
+ Compresses all files in the current directory; each file is compressed and renamed with a .gz extension.
+
+gzip -r projectX
+---------------- 
+ Compresses all files in the projectX directory along with all files in all of the directories under projectX.
+
+gunzip foo 
+----------
+ De-compresses foo found in the file foo.gz. Under the hood, gunzip command is actually the same as gzip –d.
+
+
+bzip2
+------
+it is used to compress larger files.
+
+bzip2 *
+
+ Compress all of the files in the current directory and replaces each file with a file renamed with a .bz2 extension.
+
+bunzip2 *.bz2
+
+ Decompress all of the files with an extension of .bz2 in the current directory. Under the hood, bunzip2 is the same as calling bzip2 -d.
+
+
+compress data using xz
+----------------------
+xz is the most space efficient compression utility used in Linux and is now used by www.kernel.org to store archives of the Linux kernel. Once again it trades a slower compression speed for an even higher compression ratio.
+
+
+Compressed files are stored with a .xz extension.
+
+example 
+xz foo
+
+
+
+zip
+---------
+The zip program is not often used to compress files in Linux, but it is only used in Linux when you get a zipped file from a Windows user. It is a legacy program.
+
+zip backup * 
+ Compresses all files in the current directory and places them in the file backup.zip.
+
+
+
+Archiving and Compressing Data Using tar
+---------------------------------------------------
+ It allows you to create or extract files from an archive file, often called a tarball. At the same time you can optionally compress while creating the archive, and decompress while extracting its contents.
+
+tar xvf mydir.tar
+ Extract all the files in mydir.tar into the mydir directory
+
+$ tar zcvf mydir.tar.gz mydir 
+ Create the archive and compress with gzip
+
+$ tar jcvf mydir.tar.bz2 mydir  
+Create the archive and compress with bz2
+
+$ tar Jcvf mydir.tar.xz mydir
+  Create the archive and compress with xz
+
+$ tar xvf mydir.tar.gz
+  Extract all the files in mydir.tar.gz into the mydir directory. Note you do not have to tell tar it is in gzip format.
+
+
+Disk-to-Disk Copying
+----------------------------------
+The dd program is very useful for making copies of raw disk space.
+dd if=/dev/sda of=sda.mbr bs=512 count=1
+
+
+
+------------------------------------------------------------------------------------------------------------- 
+User Environment
+----------------------------------------------------------------
+Identifying the Current User
+----------------------------
+To list the currently logged-on users, type who
+To identify the current user, type whoami
+Giving who the -a option will give more detailed information.
+
+user groups
+-----------
+Linux uses groups for organizing users. Groups are collections of accounts with certain shared permissions. Control of group membership is administered through the /etc/group file, which shows a list of groups and their members. 
+
+By default, every user belongs to a default or primary group. When a user logs in, the group membership is set for their primary group and all the members enjoy the same level of access and privilege. Permissions on various files and directories can be modified at the group level.
+
+All Linux users are assigned a unique user ID (uid), which is just an integer, as well as one or more group ID’s (gid), including a default one which is the same as the user ID.
+
+Typing id with no argument gives information about the current user, as in:
+
+adding user to group
+-------------------
+Adding a new user is done with useradd and removing an existing user is done with userdel. In the simplest form an account for the new user turkey would be done with:
+$ sudo useradd turkey
+
+The root Account
+-----------------
+owever, you can use the sudo feature to assign more limited privileges to user accounts:
+
+on only a temporary basis.
+only for a specific subset of commands.
+
+The root account is very powerful and has full access to the system. Other operating systems often call this the administrator account; in Linux it is often called the superuser account.
+To fully become root, one merely types su and then is prompted for the root password.
+
+startup files
+---------------
+In Linux, the command shell program (generally bash)  uses one or more startup files to configure the environment. Files in the /etc directory define global settings for all users while Initialization files in the user's home directory can include and/or override the global settings.
+
+The startup files can do anything the user would like to do in every command shell, such as:
+
+Customizing the user's prompt
+Defining command-line shortcuts and aliases
+Setting the default text editor
+Setting the path for where to find executable programs
+
+Order of the Startup Files
+--------------------------
+When you first login to Linux, /etc/profile is read and evaluated, after which the following files are searched (if they exist) in the listed order:
+
+~/.bash_profile
+~/.bash_login
+~/.profile 
+
