@@ -1,0 +1,83 @@
+Environment Variables
+----------------------
+Environment variables are simply named quantities that have specific values and are understood by the command shell, such as bash. Some of these are pre-set (built-in) by the system, and others are set by the user either at the command line or within startup and other scripts. An environment variable is actually no more than a character string that contains information used by one or more applications. 
+
+There are a number of ways to view the values of currently set environment variables; one can type set, env, or export. Depending on the state of your system, set may print out many more lines than the other two methods.
+
+Setting Environment Variables
+------------------------------
+By default, variables created within a script are only available to the current shell; child processes (sub-shells) will not have access to values that have been set or modified. Allowing child processes to see the values, requires use of the export command.
+
+The HOME Variable
+------------------
+HOME is an environment variable that represents the home (or login) directory of the user. cd without arguments will change the current working directory to the value of HOME. Note the tilde character (~) is often used as an abbreviation for $HOME. Thus cd $HOME and cd ~ are completely equivalent statements.
+
+The PATH Variable
+-----------------
+PATH is an ordered list of directories (the path) which is scanned when a command is given to find the appropriate program or script to run. Each directory in the path is separated by colons (:). A null (empty) directory name (or ./) indicates the current directory at any given time.
+
+The PS1 Variable
+---------------
+Prompt Statement (PS) is used to customize your prompt string in your terminal windows to display the information you want. PS1 is the primary prompt variable which controls what your command line prompt looks like. The following special characters can be included in PS1 :
+
+\u - User name 
+\h - Host name 
+\w - Current working directory 
+\! - History number of this command 
+\d - Date
+
+SHELL Variable
+----------------
+The environment variable SHELL points to the user's default command shell (the program that is handling whatever you type in a command window, usually bash) and contains the full pathname to the shell.
+
+echo $SHELL
+/bin/bash
+
+Recalling Previous Commands
+--------------------------
+ can recall previously used commands simply by using the Up and Down cursor keys. To view the list of previously executed commands, you can just type history at the command line.
+
+The list of commands is displayed with the most recent command appearing last in the list. This information is stored in ~/.bash_history.
+
+
+HISTFILE stores the location of the history file. 
+
+HISTFILESIZE stores the maximum number of lines in the history file.
+
+HISTSIZE stores the maximum number of lines in the history file for the current session
+
+Up/Down arrow key  -->  Browse through the list of commands previously executed 
+
+!! (Pronounced as bang-bang) -->   Execute the previous command
+
+CTRL-R -->  Search previously used commands
+
+! -->  Start a history substitution
+!$ -->  Refer to the last argument in a line
+!n -->  Refer to the nth command line
+!--> string Refer to the most recent command starting with string.
+
+
+KEYBOARD SHORTCUTS
+-------------------
+CTRL-L  Clears the screen
+CTRL-D  Exits the current shell
+CTRL-Z  Puts the current process into suspended background
+CTRL-C  Kills the current process
+CTRL-H  Works the same as backspace
+CTRL-A  Goes to the beginning of the line
+CTRL-W  Deletes the word before the cursor
+CTRL-U  Deletes from beginning of line to cursor position
+CTRL-E  Goes to the end of the line
+Tab Auto-completes files, directories, and binaries
+
+
+Creating Aliases
+----------------
+You can create customized commands or modify the behavior of already existing ones by creating aliases. Most often these aliases are placed in your ~/.bashrc file so they are available to any command shells you create.
+
+Typing alias with no arguments will list currently defined aliases.
+
+alias newnam='command'
+
+
